@@ -1,2 +1,13 @@
-# dbt_project
-GA4 데이터를 분석하기 위한 dbt 기반 데이터 마트 구축 프로젝트
+# GA4 BigQuery dbt Project
+
+This project uses dbt to build a data mart from GA4 (Google Analytics 4) event data on BigQuery.
+
+## Stack
+- dbt (CLI)
+- BigQuery
+- GitHub
+- Python 3.11
+
+## Project Structure
+- `models/`: dbt models
+- `dbt_project.yml`: dbt configuration
