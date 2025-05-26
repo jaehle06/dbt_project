@@ -1,9 +1,9 @@
 {{ 
   config(
     materialized = 'incremental',
-    unique_key = "concat(user_pseudo_id, '-', cast(ga_session_id as string))",
-    )
-}} 
+    unique_key = 'user_pseudo_id'
+  )
+}}
 
 SELECT  
   distinct
@@ -26,14 +26,11 @@ SELECT
   COALESCE((SELECT value.string_value FROM UNNEST (event_params) WHERE key = 'term'), 'UNK') AS event_utm_term,
   COALESCE((SELECT value.string_value FROM UNNEST (event_params) WHERE key = 'content'), 'UNK') AS event_utm_content,
  FROM {{ ref('src_ga4') }} 
+ 
 where (1=1)
-AND PARSE_DATE('%Y%m%d', event_date) >= 
   {% if is_incremental() %}
-    (select max(date) from {{ this }})
-  {% else %}
-    DATE('2025-05-24')
+    AND PARSE_DATE('%Y%m%d', event_date) >= (select max(date) from {{ this }})
   {% endif %}
-
 AND event_date is not null
 AND event_timestamp is not null
 AND event_name is not null

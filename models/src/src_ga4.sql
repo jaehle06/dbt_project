@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='concat(user_pseudo_id, "-", cast(ga_session_id as string))',
+    unique_key = 'user_pseudo_id',
     partition_by={
       "field": "date",
       "data_type": "date",

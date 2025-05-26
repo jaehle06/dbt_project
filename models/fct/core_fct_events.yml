@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: core_fct_events
+    description: 전체 이벤트 테이블
+    meta:
+      owner: LEEJAEHYUN
+    config:
+      tags: ["core", "fact"]
+      materialized: incremental
+      incremental_strategy: insert_overwrite
+      on_schema_change: append_new_columns
+      partition_by:
+        field: date
+        data_type: date
+        granularity: day
+      time_ingestion_partitioning: true
+      require_partition_filter: true
+      copy_partitions: true
+    columns:
+      - name: date
+        description: 이벤트 발생 일자
+      - name: user_pseudo_id
+        description: GA4의 사용자 식별자
