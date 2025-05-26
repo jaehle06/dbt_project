@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: src_ga4
+    description: "GA4 export raw 데이터를 통합한 증분 테이블"
+    columns:
+      - name: date
+        description: "이벤트 발생 일자"
+        tests:
+          - not_null

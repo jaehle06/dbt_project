@@ -1,3 +1,10 @@
+{{ 
+  config(
+    materialized = 'incremental',
+    unique_key = "concat(user_pseudo_id, '-', cast(ga_session_id as string))",
+    )
+}} 
+
 SELECT  
   distinct
   PARSE_DATE('%Y%m%d', event_date) AS date,
@@ -18,4 +25,17 @@ SELECT
   COALESCE((SELECT value.string_value FROM UNNEST (event_params) WHERE key = 'source'), 'UNK') AS event_utm_source,
   COALESCE((SELECT value.string_value FROM UNNEST (event_params) WHERE key = 'term'), 'UNK') AS event_utm_term,
   COALESCE((SELECT value.string_value FROM UNNEST (event_params) WHERE key = 'content'), 'UNK') AS event_utm_content,
-FROM `practice-215909.analytics_336023799.events_20250519`
+ FROM {{ ref('src_ga4') }} 
+where (1=1)
+AND PARSE_DATE('%Y%m%d', event_date) >= 
+  {% if is_incremental() %}
+    (select max(date) from {{ this }})
+  {% else %}
+    DATE('2025-05-24')
+  {% endif %}
+
+AND event_date is not null
+AND event_timestamp is not null
+AND event_name is not null
+
+
